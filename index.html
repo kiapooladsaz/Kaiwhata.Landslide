@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Kaiwhata Landslide</title>
+<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+<base target="_blank">
+<link rel="stylesheet" type="text/css" href="./Qgis2threejs.css">
+<script src="./threejs/three.min.js"></script>
+<script src="./threejs/OrbitControls.js"></script>
+<script src="./threejs/ViewHelper.js"></script>
+<script src="./tweenjs/tween.js"></script>
+<script src="./Qgis2threejs.js"></script>
+<script src="./dat-gui/dat.gui.min.js"></script>
+<script src="./dat-gui_panel.js"></script>
+</head>
+<body>
+<div id="view">
+  <div id="northarrow"></div>
+  <div id="navigation"></div>
+</div>
+
+<!-- popup -->
+<div id="popup">
+  <div id="closebtn">&times;</div>
+  <div id="popupbar"></div>
+  <div id="popupbody">
+    <div id="popupcontent"></div>
+
+    <!-- query result -->
+    <div id="queryresult">
+      <table id="qr_coords_table">
+        <caption>Clicked coordinates <div id="zoomtopoint" class="action-zoom zoombtn"></div></caption>
+        <tr><td id="qr_coords"></td></tr>
+      </table>
+
+      <table id="qr_layername_table">
+        <caption>Layer <div id="zoomtolayer" class="action-zoom zoombtn"></div></caption>
+        <tr><td id="qr_layername"></td></tr>
+      </table>
+
+      <table id="qr_attrs_table">
+        <caption>Attributes</caption>
+      </table>
+
+      <!-- camera actions and measure tool -->
+      <div id="orbitbtn" class="action-btn action-orbit">Orbit</div>
+      <div id="measurebtn" class="action-btn">Measure distance</div>
+    </div>
+
+    <!-- page info -->
+    <div id="pageinfo">
+      <h1>Current View URL</h1>
+      <div><input id="urlbox" type="text"></div>
+
+      <h1>Usage</h1>
+      <table id="usage">
+        <tr><td colspan="2" class="star">Mouse</td></tr>
+        <tr><td>Left button + Move</td><td>Orbit</td></tr>
+        <tr><td>Mouse Wheel</td><td>Zoom</td></tr>
+        <tr><td>Right button + Move</td><td>Pan</td></tr>
+
+        <tr><td colspan="2" class="star">Keys</td></tr>
+        <tr><td>Arrow keys</td><td>Move Horizontally</td></tr>
+        <tr><td>Shift + Arrow keys</td><td>Orbit</td></tr>
+        <tr><td>Ctrl + Arrow keys</td><td>Rotate</td></tr>
+        <tr><td>Shift + Ctrl + Up / Down</td><td>Zoom In / Out</td></tr>
+        <tr><td>L</td><td>Toggle Label Visibility</td></tr>
+        <tr><td>R</td><td>Start / Stop Orbit Animation</td></tr>
+        <tr><td>W</td><td>Wireframe Mode</td></tr>
+        <tr><td>Shift + R</td><td>Reset Camera Position</td></tr>
+        <tr><td>Shift + S</td><td>Save Image</td></tr>
+      </table>
+
+      <h1>About</h1>
+      <div id="about">
+        This page was made with <a href="https://www.qgis.org/">QGIS</a> and <a href="https://github.com/minorua/Qgis2threejs">Qgis2threejs</a> plugin (version 2.7.1).
+        <div>Powered by <a href="https://threejs.org/">three.js</a>,
+        <a href="https://code.google.com/p/dat-gui/">dat-gui</a>
+        <span id="lib_proj4js"> and <a href="https://trac.osgeo.org/proj4js/">Proj4js</a></span>.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- progress bar -->
+<div id="progress"><div id="progressbar"></div></div>
+
+<!-- header and footer -->
+<div id="header">Monitoring the Evolution of the Kaiwhata Landslide in New Zealand using Object-based Image Analysis and Sentinel-2 Time Series</div>
+<div id="footer">Landslides and landslide-dammed lakes were delineated using OBIA methodology.
+Satellite image sources: https://scihub.copernicus.eu/ , https://www.planet.com/.
+DEM and Aerial Image source: https://data.linz.govt.nz/</div>
+
+<!-- animation -->
+<div id="narrativebox" class="ef1">
+  <div id="narbody">
+    <div id="nar_e972f083" class="narcontent">
+      Landslides are among the most harmful geological hazards in mountainous and hilly areas of New Zealand, where they frequently cause significant damage and landscape changes. Monitoring the evolution of landslides and their subsequent impacts helps to mitigate the hazards that could arise in later reactivation phases or other similar cases. The abundance of time series remote sensing data has facilitated the mapping and monitoring of landslides. By applying object-based image analysis (OBIA), it was aimed to semi-automatically map the evolution of the Kaiwhata landslide and the subsequent impacts on the upstream area in the Wairarapa region in New Zealand using Sentinel-2 satellite data from 2017 to 2021. This work belongs to Kiarash Pooladsaz's master thesis for Copernicus Master in Digital Earth.
+      <center><img src="./data/index/img/logo.png" width="80%"></center>
+    </div>
+    <div id="nar_a156cc8d" class="narcontent">
+      Kaiwhata landslide is located east of Wellington, North Island. The AOI covers 970 ha and is characterised by the Kaiwhata River and Road. The topography varies from 10 m to 500 m a.s.l.
+      
+      <center><img src="./data/index/img/Case Overview_new.png" width="90%"></center>
+      
+      
+      
+    </div>
+    <div id="nar_033037cd" class="narcontent">
+      Initial landslide occured in 2017 but its extent was relatively low. However, the second and third landslide had huge impacts on the landscape:
+      <center><img src="./data/index/img/Case Overview2p.png" width="90%"></center>
+      The second landslide in 2019: a) South-to-north view of the second landslide failure (photograph: © B. Rosser; 6 June 2019); b) Landslide formed a dam and blocked the river (photograph: © R. Morgenstern; 6 June 2019); c) Lake was formed upstream and flooded the land and infrastructure (photograph: © R. Morgenstern); d) Dam failed and enormous amount of water went downstream (photograph: © R. Morgenstern; 14 June 2019).
+      <center><img src="./data/index/img/Case Overview3p.png" width="90%"></center> The third landslide in 2020: a) South-to-north view of the third landslide failure (photograph: © M. Anselm); b) Landslide formed a dam and blocked the river; the landslide-dammed lake is visible on the left side (photograph: © Lithofile); c) Lake was formed upstream and flooded the land and infrastructure (photograph: © M. Anselm); d) Dam failed and enormous amount of water went downstream (photograph: © GNS).
+    </div>
+    <div id="nar_65c63951" class="narcontent">
+      Here is the overall framework of landslide and landslide-dammed lake classification. The ruleset follows several steps to attain and complete the desired classes. Each step consists of multiresolution segmentation, set of classification parameters, and class refinement. Meanwhile, we did not apply this overall ruleset to all the images, where the expansion of the landslide failure was accompanied by more sets of parameters and refinements. The value dedicated to some layers such as NDVI, DEM, and aspect are varied (VARIES) in different dates.
+      <center><img src="./data/index/img/Rule-setFF.png" width="100%"></center>
+      
+    </div>
+  </div>
+  <div id="nextbtn"></div>
+</div>
+
+<script>
+Q3D.Config.bgColor = 0xbeb49d;
+Q3D.Config.localMode = true;
+Q3D.Config.animation.enabled = true;
+Q3D.Config.animation.startOnLoad = true;
+Q3D.Config.northArrow.enabled = true;
+Q3D.Config.northArrow.color = 0x03051a;
+
+var container = document.getElementById("view"),
+    app = Q3D.application,
+    gui = Q3D.gui;
+
+app.init(container);    // initialize viewer
+
+// load the scene
+app.loadSceneFile("./data/index/scene.js", function (scene) {
+  // scene file has been loaded
+  app.start();
+
+  gui.dat.initLayersFolder(scene);
+
+}, function (scene) {
+  // all relevant files have been loaded
+
+  if (Q3D.Config.gui.customPlane) {
+    var zMin = undefined,
+        zMax = undefined;
+    gui.dat.initCustomPlaneFolder(zMin, zMax);
+  }
+});
+</script>
+</body>
+</html>
